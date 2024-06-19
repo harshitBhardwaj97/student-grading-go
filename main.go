@@ -23,7 +23,8 @@ type student struct {
 
 // Stringer function for student struct
 func (s student) String() string {
-	return fmt.Sprintf("{ \n Student's name: %v \n Student's University: %v \n Student's score 1: %v \n Student's score 2: %v \n Student's score 3: %v \n Student's score 4: %v \n }\n", (s.firstName + " " + s.lastName), s.university, s.test1Score, s.test2Score, s.test3Score, s.test4Score)
+	studentTemplate := "{ \n Student's name: %v \n Student's University: %v \n Student's score 1: %v \n Student's score 2: %v \n Student's score 3: %v \n Student's score 4: %v \n }\n"
+	return fmt.Sprintf(studentTemplate, (s.firstName + " " + s.lastName), s.university, s.test1Score, s.test2Score, s.test3Score, s.test4Score)
 }
 
 type studentStat struct {
@@ -99,8 +100,11 @@ func parseCSV(filePath string) []student {
 
 		students = append(students, currentStudent)
 
-		// fmt.Println("Current student is", currentStudent)
-		// fmt.Println("-----------")
+		/*
+			fmt.Println("Current student is", currentStudent)
+			fmt.Println("-----------")
+		*/
+
 	}
 	return students
 }
@@ -122,7 +126,15 @@ func calculateGrade(students []student) []studentStat {
 }
 
 func findOverallTopper(gradedStudents []studentStat) studentStat {
-	return studentStat{}
+	var overAllTopper studentStat
+	overAllTopper.finalScore = -1.0
+
+	for _, stat := range gradedStudents {
+		if stat.finalScore > overAllTopper.finalScore {
+			overAllTopper = stat
+		}
+	}
+	return overAllTopper
 }
 
 func findTopperPerUniversity(gs []studentStat) map[string]studentStat {
