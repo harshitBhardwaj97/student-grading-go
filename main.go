@@ -138,5 +138,18 @@ func findOverallTopper(gradedStudents []studentStat) studentStat {
 }
 
 func findTopperPerUniversity(gs []studentStat) map[string]studentStat {
-	return nil
+	universityWiseStudentStat := make(map[string][]studentStat)
+	topperPerUniversity := make(map[string]studentStat)
+
+	for _, studentStat := range gs {
+		universityWiseStudentStat[studentStat.university] = append(universityWiseStudentStat[studentStat.university], studentStat)
+	}
+
+	for k, v := range universityWiseStudentStat {
+		currentUniversity := k
+		currentUniversityTopper := findOverallTopper(v)
+		topperPerUniversity[currentUniversity] = currentUniversityTopper
+	}
+
+	return topperPerUniversity
 }
