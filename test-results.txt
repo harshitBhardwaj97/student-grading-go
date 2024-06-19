@@ -1,0 +1,10 @@
+=== RUN   TestParseCSV
+--- PASS: TestParseCSV (0.00s)
+=== RUN   TestCalculateGrade
+--- PASS: TestCalculateGrade (0.00s)
+=== RUN   TestFindOverallTopper
+--- PASS: TestFindOverallTopper (0.00s)
+=== RUN   TestFindTopperPerUniversity
+--- PASS: TestFindTopperPerUniversity (0.00s)
+PASS
+ok  	github.com/one2nc/student-grading-go	0.464s
