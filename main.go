@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -20,10 +21,35 @@ type student struct {
 	test1Score, test2Score, test3Score, test4Score int
 }
 
+// Stringer function for student struct
+func (s student) String() string {
+	return fmt.Sprintf("{ \n Student's name: %v \n Student's University: %v \n Student's score 1: %v \n Student's score 2: %v \n Student's score 3: %v \n Student's score 4: %v \n }\n", (s.firstName + " " + s.lastName), s.university, s.test1Score, s.test2Score, s.test3Score, s.test4Score)
+}
+
 type studentStat struct {
 	student
 	finalScore float32
 	grade      Grade
+}
+
+func findFinalScore(scores ...int) float32 {
+	total := 0
+	for _, score := range scores {
+		total += score
+	}
+	return float32(total) / float32(len(scores))
+}
+
+func findFinalGrade(finalScore float32) Grade {
+	if finalScore < 35 {
+		return F
+	} else if finalScore >= 35 && finalScore < 50 {
+		return C
+	} else if finalScore >= 50 && finalScore < 70 {
+		return B
+	} else {
+		return A
+	}
 }
 
 func parseCSV(filePath string) []student {
@@ -45,7 +71,7 @@ func parseCSV(filePath string) []student {
 
 		// Read each record from CSV
 		record, err := reader.Read()
-		
+
 		if err != nil {
 			break // Break if end of file
 		}
@@ -80,7 +106,19 @@ func parseCSV(filePath string) []student {
 }
 
 func calculateGrade(students []student) []studentStat {
-	return nil
+
+	var studentStats []studentStat
+
+	for _, student := range students {
+		currentStudentStat := studentStat{}
+		currentStudentStat.student = student
+		currentStudentFinalScore := findFinalScore(student.test1Score, student.test2Score, student.test3Score, student.test4Score)
+		currentStudentStat.finalScore = currentStudentFinalScore
+		currentStudentStat.grade = findFinalGrade(currentStudentFinalScore)
+
+		studentStats = append(studentStats, currentStudentStat)
+	}
+	return studentStats
 }
 
 func findOverallTopper(gradedStudents []studentStat) studentStat {
