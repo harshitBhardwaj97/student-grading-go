@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"strconv"
 )
@@ -56,7 +58,7 @@ func findFinalGrade(finalScore float32) Grade {
 func parseCSV(filePath string) []student {
 	file, err := os.Open(filePath)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	defer file.Close()
@@ -73,7 +75,7 @@ func parseCSV(filePath string) []student {
 		// Read each record from CSV
 		record, err := reader.Read()
 
-		if err != nil {
+		if err == io.EOF {
 			break // Break if end of file
 		}
 
@@ -88,10 +90,14 @@ func parseCSV(filePath string) []student {
 		currentStudent.lastName = record[1]
 		currentStudent.university = record[2]
 
-		score1, _ := strconv.Atoi(record[3])
-		score2, _ := strconv.Atoi(record[4])
-		score3, _ := strconv.Atoi(record[5])
-		score4, _ := strconv.Atoi(record[6])
+		score1, err1 := strconv.Atoi(record[3])
+		score2, err2 := strconv.Atoi(record[4])
+		score3, err3 := strconv.Atoi(record[5])
+		score4, err4 := strconv.Atoi(record[6])
+
+		if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
+			log.Fatalf("error occurred while parsing the marks of student %+v", currentStudent)
+		}
 
 		currentStudent.test1Score = score1
 		currentStudent.test2Score = score2
